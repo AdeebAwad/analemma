@@ -1,5 +1,5 @@
-import { CloseIcon, ExternalLinkIcon, HamburgerIcon } from '@chakra-ui/icons';
-import { Box, IconButton, Link, Stack, useDisclosure } from '@chakra-ui/react';
+import { ExternalLinkIcon } from '@chakra-ui/icons';
+import { Box, Link, Stack } from '@chakra-ui/react';
 import React from 'react';
 import { rgb } from '../Utils/Utils';
 

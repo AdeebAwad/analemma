@@ -11,9 +11,7 @@ import { CloseIcon, ExternalLinkIcon, HamburgerIcon } from '@chakra-ui/icons';
 import IconDay from './IconDay';
 import IconNight from './IconNight';
 import MobileNav from './MobileNav';
-import { isDay, rgb, SOURCE_CODE_LINK } from '../Utils/Utils';
-
-const color = { light: 'white', dark: 'black' };
+import { rgb, SOURCE_CODE_LINK } from '../Utils/Utils';
 
 const NavBar = ({ toggleColors, color }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();

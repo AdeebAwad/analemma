@@ -1,11 +1,4 @@
-import {
-  Box,
-  Container,
-  Stack,
-  Text,
-  Link,
-  useColorModeValue,
-} from '@chakra-ui/react';
+import { Box, Container, Stack, Text, Link } from '@chakra-ui/react';
 import { rgb } from '../Utils/Utils';
 
 const Footer = ({ color, toggleColors }) => {

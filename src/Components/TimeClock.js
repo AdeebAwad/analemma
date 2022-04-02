@@ -1,4 +1,4 @@
-import { Box, Heading, Image, VStack } from '@chakra-ui/react';
+import { Box, Image, VStack } from '@chakra-ui/react';
 import React from 'react';
 import Sun from '../assets/Sun.svg';
 import Moon from '../assets/Moon.svg';
