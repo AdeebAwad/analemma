@@ -1,68 +1,67 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Analemma
 
-## Available Scripts
+The basic idea of this project is to generate a color scheme based on the **location** and **time of day** of the user, so that as time passes a new color is generated.
 
-In the project directory, you can run:
+**The How of it is made into sections:**
 
-### `npm start`
+## Color choice:
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+The Colors are picked based on the cycle of day & night, and I made it as close to real life colors as possible.
+The Colors I choose with their RGB Values are present in the chart below:
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+![Color Chart](https://user-images.githubusercontent.com/52047357/161374735-023bdf23-6968-41fd-a547-3c87df163483.png)
 
-### `npm test`
+Each of these colors represents a part of the day.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Color Transition:
 
-### `npm run build`
+The transition between these colors and defining what colors goes with what time zone is made possible through an integration with the [api.aladhan](https://api.aladhan.com/) that fetches the prayer times of the day based on the user's latitude and longitude.
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+And if you are wondering what a prayer has to do with setting colors transitions, basically in the islamic religion, Prayer times are determined by the position of the sun in the sky, so using that we can define what colors goes to what time and so on.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+The API returnes a lot of data but what we are using in this project are the timing of the prayers, each paryer translates to a part of the day.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Here's a description for each prayer time and what it translates to:
 
-### `npm run eject`
+- Fajr: When morning light in the sky starts spreadings horizontally.
+- Sunrise: When the top of the sun's disk just appears above the horizon.
+- Dhuhr: When the sun begins to decline after reaching its highest point
+- Asr: When the length of any object's shadow reaches a factor of the length of the object plus the length of that object's shadow at Noon
+- Maghrib: When the top of the sun's disk just disappears below the horizon.
+- Isha: Disappearance of Shafaq At high latitudes a combination of red and white shafaq criteria is used.
+- Midnight: Midnight Time.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Now that we have an idea of what prayers are now we map the colors to each one, the mapping is done as the table below.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+![image](https://user-images.githubusercontent.com/52047357/161376090-4f415ef5-cb88-4113-b406-6517a3536960.png)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Each Time of day transitions is mapped with multiple color transitions.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Color Mapping:
 
-## Learn More
+This is done using a multi-step process which includes the following:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- Each _Time Of day Transition_ is Mapped into **Zones**, each zone has it's **start-end time** and an **Array of colors transitions**. -_For each element in the array,we store the start and end values, where the start values are the initial color RGB and the end RGB are the next color in the zone and so on util all colors for this zone are defined._.
+- Also we store inside the element the start & end time for each color transition to define how much time each transition takes.
+- I made an assumption regarding the time for each color transition, where I equally devided the time between transitions. (E.g.,if a zone has 2 transitions A->B->C then A->B would take 50% of total zone time and B->C would take the remaining 50%.)
+- This will generate a **`Zones`** object that contains multiple zones with their colors.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Color Generation:
 
-### Code Splitting
+This is where the magic Happens!
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+The main concept is fetching the current time from the user's localtime every 10 min _(Modifiable)_, then using this time we fetched to extract the color from the **`Zones`** Object.
 
-### Analyzing the Bundle Size
+I did this using a concept called [Linear interpolation](https://en.wikipedia.org/wiki/Linear_interpolation).
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+The Idea behind it is that if have two known points `(x1,y2)` & `(x1,y2)` and the line between them is linear, then we can calculate any value between those two points.
 
-### Making a Progressive Web App
+In the **`Zones`** Object we have each _color's start - end time_ **And** _color start - end RGB transition_.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+So using those and the time extracted from the localtime, we can use an equation to find the exact color values (RGB) and generate the desired color.
 
-### Advanced Configuration
+These colors are applied to the backgroung attribute of the website.
+As for the Text elements we defined two static colors:
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+1. `#F5F5F5` for Night Time (Maghrib to Sunrise).
+2. `#1A202C` for Day Time (Sunrise to Maghrib).
